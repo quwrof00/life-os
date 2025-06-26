@@ -1,0 +1,79 @@
+import { NextRequest, NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+
+export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
+  const params2 = await params;
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const message = await prisma.message.findUnique({ where: { id: params2.id } });
+    if (!message) {
+      return NextResponse.json({ success: false, error: 'Not found' }, { status: 404 });
+    }
+    return NextResponse.json({ success: true, message });
+  } catch {
+    return NextResponse.json({ success: false, error: 'Fetch failed' }, { status: 500 });
+  }
+}
+
+//study edit 
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+  const { content } = await req.json();
+
+  if (typeof content !== 'string' || !content.trim()) {
+    return NextResponse.json({ success: false, error: 'Valid content required' }, { status: 400 });
+  }
+  const params2 = await params;
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const updated = await prisma.message.update({
+      where: { id: params2.id },
+      data: { content },
+    });
+    return NextResponse.json({ success: true, message: updated });
+  } catch (err) {
+    return NextResponse.json({ success: false, error: 'Update failed' }, { status: 500 });
+  }
+}
+
+//tasks complete toggle
+export async function PATCH(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const { id } = await params;
+    const { completed } = await req.json();
+
+    if (typeof completed !== 'boolean') {
+      return NextResponse.json(
+        { success: false, error: 'Invalid completed value' },
+        { status: 400 }
+      );
+    }
+
+    const updated = await prisma.message.update({
+      where: { id },
+      data: { completed },
+    });
+
+    return NextResponse.json({ success: true, message: updated });
+  } catch (err) {
+    console.error('[UPDATE_MESSAGE_ERROR]', err);
+    return NextResponse.json(
+      { success: false, error: 'Internal error' },
+      { status: 500 }
+    );
+  }
+}
