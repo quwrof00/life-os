@@ -3,57 +3,90 @@ import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
-export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
-  const params2 = await params;
+export async function GET(
+  _: NextRequest,
+  paramsPromise: Promise<{ params: { id: string } }>
+) {
+  const { params } = await paramsPromise;
+  const { id } = params;
+
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const message = await prisma.message.findUnique({ where: { id: params2.id } });
+
+    const message = await prisma.message.findUnique({
+      where: { id },
+    });
+
     if (!message) {
-      return NextResponse.json({ success: false, error: 'Not found' }, { status: 404 });
+      return NextResponse.json(
+        { success: false, error: 'Not found' },
+        { status: 404 }
+      );
     }
+
     return NextResponse.json({ success: true, message });
-  } catch {
-    return NextResponse.json({ success: false, error: 'Fetch failed' }, { status: 500 });
+  } catch (err) {
+    console.error('Error fetching message:', err);
+    return NextResponse.json(
+      { success: false, error: 'Fetch failed' },
+      { status: 500 }
+    );
   }
 }
 
-//study edit 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(
+  req: NextRequest,
+  paramsPromise: Promise<{ params: { id: string } }>
+) {
+  const { params } = await paramsPromise;
+  const { id } = params;
+
   const { content } = await req.json();
 
   if (typeof content !== 'string' || !content.trim()) {
-    return NextResponse.json({ success: false, error: 'Valid content required' }, { status: 400 });
+    return NextResponse.json(
+      { success: false, error: 'Valid content required' },
+      { status: 400 }
+    );
   }
-  const params2 = await params;
+
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
     const updated = await prisma.message.update({
-      where: { id: params2.id },
+      where: { id },
       data: { content },
     });
+
     return NextResponse.json({ success: true, message: updated });
-  } catch {
-    return NextResponse.json({ success: false, error: 'Update failed' }, { status: 500 });
+  } catch (err) {
+    console.error('[UPDATE_PUT_ERROR]', err);
+    return NextResponse.json(
+      { success: false, error: 'Update failed' },
+      { status: 500 }
+    );
   }
 }
 
-//tasks complete toggle
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  paramsPromise: Promise<{ params: { id: string } }>
 ) {
+  const { params } = await paramsPromise;
+  const { id } = params;
+
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const { id } = await params;
+
     const { completed } = await req.json();
 
     if (typeof completed !== 'boolean') {
@@ -70,7 +103,7 @@ export async function PATCH(
 
     return NextResponse.json({ success: true, message: updated });
   } catch (err) {
-    console.error('[UPDATE_MESSAGE_ERROR]', err);
+    console.error('[UPDATE_PATCH_ERROR]', err);
     return NextResponse.json(
       { success: false, error: 'Internal error' },
       { status: 500 }
