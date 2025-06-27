@@ -1,15 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 
-interface Props {
-  params: {
-    messageId: string;
-  };
-}
-
-export async function GET(request: NextRequest, { params }: Props) {
+export async function GET(
+  request: Request,
+  { params }: { params: { messageId: string } }
+) {
   const { messageId } = params;
 
   try {
@@ -29,25 +26,26 @@ export async function GET(request: NextRequest, { params }: Props) {
   }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { messageId: string } }) {
+export async function PUT(
+  request: Request,
+  { params }: { params: { messageId: string } }
+) {
   const { messageId } = params;
-  const { why, how, when } = await req.json();
+  const { why, how, when } = await request.json();
 
   try {
     const idea = await prisma.idea.upsert({
       where: { messageId },
       update: { why, how, when },
-      create: {
-        messageId,
-        why,
-        how,
-        when,
-      },
+      create: { messageId, why, how, when },
     });
 
     return NextResponse.json({ success: true, idea });
   } catch (error) {
     console.error('Error updating idea:', error);
-    return NextResponse.json({ success: false, error: 'Failed to update idea' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: 'Failed to update idea' },
+      { status: 500 }
+    );
   }
 }
