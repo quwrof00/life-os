@@ -3,10 +3,13 @@ import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { messageId: string } }
-) {
+interface Props {
+  params: {
+    messageId: string;
+  };
+}
+
+export async function GET(request: NextRequest, { params }: Props) {
   const { messageId } = params;
 
   try {
