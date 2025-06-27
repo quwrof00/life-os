@@ -4,8 +4,12 @@ import StudyEditor from '@/components/StudyEditor';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
-export default async function StudyDetailPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+interface PageProps {
+  params: Promise<{ id: string }>;   
+}
+
+export default async function StudyDetailPage({ params }: PageProps) {
+  const { id } = await params; 
   const session = await getServerSession(authOptions);
   const user = session?.user || null;
 
