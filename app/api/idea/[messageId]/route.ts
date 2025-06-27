@@ -3,22 +3,23 @@ import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
-export async function GET(req: NextRequest, { params }: { params: { messageId: string } }) {
-  const { messageId } = await params;
+export async function GET(req: NextRequest,{ params }: { params: { messageId: string } } ) {
+  const { messageId } = params;             
 
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const idea = await prisma.idea.findUnique({
-      where: { messageId },
-    });
 
+    const idea = await prisma.idea.findUnique({ where: { messageId } });
     return NextResponse.json({ success: true, idea });
-  } catch (error) {
-    console.error('Error fetching idea:', error);
-    return NextResponse.json({ success: false, error: 'Failed to fetch idea' }, { status: 500 });
+  } catch (err) {
+    console.error('Error fetching idea:', err);
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch idea' },
+      { status: 500 }
+    );
   }
 }
 
