@@ -39,13 +39,16 @@ async function getMessages(date: string, userId: string): Promise<Message[]> {
   }
 }
 
-export default async function TimelinePage({ params }: { params: { date: string } }) {
-  const params2 = await params;
-  const rawDate = params2.date;
+interface TimelinePageProps {
+  params: Promise<{ date: string }>;   
+}
+
+export default async function TimelinePage({ params }: TimelinePageProps) {
+  const { date } = await params;
 
   const parsedDate = (() => {
     try {
-      const d = parseISO(rawDate);
+      const d = parseISO(date);
       return isValid(d) ? d : new Date();
     } catch {
       return new Date();
@@ -58,7 +61,7 @@ export default async function TimelinePage({ params }: { params: { date: string 
     return null;
   }
 
-  const messages = await getMessages(rawDate, session.user.id);
+  const messages = await getMessages(date, session.user.id);
 
   const prevDay = subDays(parsedDate, 1);
   const nextDay = addDays(parsedDate, 1);
