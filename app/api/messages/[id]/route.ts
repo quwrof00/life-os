@@ -24,14 +24,16 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  paramsPromise: Promise<{ params: { id: string } }>
+  { params }: { params: Promise<{ id: string }> } 
 ) {
-  const { params } = await paramsPromise;
-  const { id } = params;
+  const { id } = await params;
   const { content } = await req.json();
 
   if (typeof content !== 'string' || !content.trim()) {
-    return NextResponse.json({ success: false, error: 'Valid content required' }, { status: 400 });
+    return NextResponse.json(
+      { success: false, error: 'Valid content required' },
+      { status: 400 }
+    );
   }
 
   const session = await getServerSession(authOptions);
@@ -39,16 +41,20 @@ export async function PUT(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const updated = await prisma.message.update({ where: { id }, data: { content } });
+  const updated = await prisma.message.update({
+    where: { id },
+    data: { content },
+  });
+
   return NextResponse.json({ success: true, message: updated });
 }
 
+
 export async function PATCH(
-  req: NextRequest,                                       
-  paramsPromise: Promise<{ params: { id: string } }>   
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }  
 ) {
-  const { params } = await paramsPromise;                
-  const { id } = params;
+  const { id } = await params;                      
 
   const { completed } = await req.json();
   if (typeof completed !== 'boolean') {
