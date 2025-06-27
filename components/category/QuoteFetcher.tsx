@@ -8,7 +8,7 @@ export default function QuoteFetcher() {
   const [quotes, setQuotes] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [copied, setCopied] = useState<Boolean>(false);
+  const [copied, setCopied] = useState<boolean>(false);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function QuoteFetcher() {
         } else {
           setError(data.error || 'Failed to fetch quotes');
         }
-      } catch (err) {
+      } catch {
         setError('Failed to fetch quotes');
       } finally {
         setLoading(false);

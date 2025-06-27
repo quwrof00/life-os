@@ -38,7 +38,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       data: { content },
     });
     return NextResponse.json({ success: true, message: updated });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Update failed' }, { status: 500 });
   }
 }

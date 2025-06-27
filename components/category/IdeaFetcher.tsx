@@ -64,7 +64,7 @@ export default function IdeaFetcher() {
                     } as IdeaDetails
                   ];
                 }
-              } catch (error) {
+              } catch {
                 console.warn(`Failed to fetch idea details for message ${msg.id}`)
               }
               return [msg.id, null];
@@ -76,7 +76,7 @@ export default function IdeaFetcher() {
         } else {
           setError('Failed to fetch ideas');
         }
-      } catch (error) {
+      } catch {
         setError('Failed to fetch ideas');
       } finally {
         setLoading(false);

@@ -43,8 +43,8 @@ export default function MediaFetcher() {
           (m: MediaMessage) => typeof m.id === 'string' && m.id.length > 0,
         );
         setMediaOpinions(cleaned);
-      } catch (e: any) {
-        setError(e.message || 'Failed to fetch media opinions');
+      } catch {
+        setError('Failed to fetch media opinions');
       } finally {
         setLoading(false);
       }

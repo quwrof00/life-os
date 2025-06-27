@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { Message } from '@prisma/client';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import clsx from 'clsx';
 import { debounce } from 'lodash';
 
@@ -48,7 +48,7 @@ export default function TaskFetcher() {
           setTasks(validTasks);
 
           const detailsEntries = await Promise.all(
-            validTasks.map(async (task: any) => {
+            validTasks.map(async (task: Message) => {
               try {
                 const res = await fetch(`/api/task/${task.id}`);
                 const data = await res.json();
@@ -72,7 +72,7 @@ export default function TaskFetcher() {
             })
           );
 
-          const details = Object.fromEntries(detailsEntries.filter(([_, v]) => v));
+          const details = Object.fromEntries(detailsEntries.filter(([, v]) => v));
           const labels = Object.fromEntries(
             Object.entries(details).map(([id, d]) => [id, d?.labels.join(', ') || ''])
           );
@@ -318,6 +318,11 @@ export default function TaskFetcher() {
                     <p className="text-neon-red text-sm mt-2 relative z-10">
                       {saveError[task.id]}
                     </p>
+                  )}
+                  {saving === task.id && (
+                    <p className="text-neon-blue text-sm mt-2 relative z-10 animate-pulse">
+                      Saving…
+                      </p>
                   )}
                 </motion.li>
               );

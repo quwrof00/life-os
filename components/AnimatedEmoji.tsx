@@ -14,7 +14,19 @@ const moodEmojiMap: Record<string, string> = {
   REFLECTIVE: '🤔',
 };
 
-const moodAnimations: Record<string, any> = {
+type AnimationProps = {
+  rotate?: number[];
+  y?: number[];
+  x?: number[];
+  scale?: number[];
+  opacity?: number[];
+  transition?: {
+    repeat: number | typeof Infinity;
+    duration: number;
+  };
+};
+
+const moodAnimations: Record<string, AnimationProps> = {
   ANGRY: { rotate: [0, -10, 10, -10, 0], transition: { repeat: Infinity, duration: 0.6 } },
   SAD: { y: [0, -5, 0], transition: { repeat: Infinity, duration: 1 } },
   HAPPY: { scale: [1, 1.2, 1], transition: { repeat: Infinity, duration: 1 } },

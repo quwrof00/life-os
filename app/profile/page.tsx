@@ -25,7 +25,7 @@ export default function Page() {
       } else {
         setError(data.error || 'Failed to load profile');
       }
-    } catch (err) {
+    } catch {
       setError('Something went wrong');
     } finally {
       setLoading(false);

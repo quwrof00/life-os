@@ -18,7 +18,7 @@ interface StudyEditorProps {
 export default function StudyEditor({ initialContent, messageId, user }: StudyEditorProps) {
   const [content, setContent] = useState(initialContent);
   const [original, setOriginal] = useState(initialContent);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
@@ -111,7 +111,7 @@ export default function StudyEditor({ initialContent, messageId, user }: StudyEd
     }
   }
 
-  if (loading || !editor) {
+  if (!editor) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-neon-blue text-center font-medium">

@@ -5,7 +5,6 @@ import { HeatMapChart } from '@/components/HeatMapChart';
 import { AnimatedEmoji } from '@/components/AnimatedEmoji';
 import { Message } from '@prisma/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import clsx from 'clsx';
 
 export default function RantPage() {
   const [rants, setRants] = useState<Message[]>([]);

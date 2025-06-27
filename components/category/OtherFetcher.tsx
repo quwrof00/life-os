@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { Message } from '@prisma/client';
 import { motion, useReducedMotion } from 'framer-motion';
-import clsx from 'clsx';
 
 export default function OtherFetcher() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -33,7 +32,7 @@ export default function OtherFetcher() {
         } else {
           setError(data.error || 'Failed to fetch messages');
         }
-      } catch (err) {
+      } catch {
         setError('Failed to fetch messages');
       } finally {
         setLoading(false);

@@ -38,7 +38,7 @@ export default function StudyFetcher() {
         } else {
           setError(data.error || 'Something went wrong');
         }
-      } catch (err) {
+      } catch {
         setError('Failed to fetch messages');
       } finally {
         setLoading(false);
