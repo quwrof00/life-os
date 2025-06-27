@@ -24,10 +24,10 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  paramsPromise: Promise<{ params: { id: string } }>
+  paramsPromise: Promise<{ params: Promise<{ id: string }> }>
 ) {
   const { params } = await paramsPromise;
-  const { id } = params;
+  const { id } = await params;
 
   const { content } = await req.json();
 
@@ -61,10 +61,10 @@ export async function PUT(
 
 export async function PATCH(
   req: Request,
-  paramsPromise: Promise<{ params: { id: string } }>
+  paramsPromise: Promise<{ params: Promise<{ id: string }> }>
 ) {
   const { params } = await paramsPromise;
-  const { id } = params;
+  const { id } = await params;
 
   try {
     const session = await getServerSession(authOptions);
