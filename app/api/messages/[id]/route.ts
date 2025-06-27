@@ -4,37 +4,22 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
 export async function GET(
-  _: NextRequest,
-  paramsPromise: Promise<{ params: { id: string } }>
+  _req: NextRequest,
+  { params }: { params: { id: string } }
 ) {
-  const { params } = await paramsPromise;
   const { id } = params;
 
-  try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const message = await prisma.message.findUnique({
-      where: { id },
-    });
-
-    if (!message) {
-      return NextResponse.json(
-        { success: false, error: 'Not found' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({ success: true, message });
-  } catch (err) {
-    console.error('Error fetching message:', err);
-    return NextResponse.json(
-      { success: false, error: 'Fetch failed' },
-      { status: 500 }
-    );
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+
+  const message = await prisma.message.findUnique({ where: { id } });
+  if (!message) {
+    return NextResponse.json({ success: false, error: 'Not found' }, { status: 404 });
+  }
+
+  return NextResponse.json({ success: true, message });
 }
 
 export async function PUT(
