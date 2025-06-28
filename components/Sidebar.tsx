@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
@@ -27,7 +27,7 @@ export default function Sidebar() {
     setActiveLoading(null);
   }, [pathname]);
 
-  const renderLink = (t: string, index: number) => {
+  const renderLink = (t: string) => {
     const href = `/category/${t}`;
     const active = pathname === href;
 
