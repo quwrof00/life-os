@@ -3,11 +3,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { useProfileStore } from '@/stores/userStore';
 import { motion } from 'framer-motion';
 
 export default function Navbar() {
+  const { status } = useSession(); 
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -19,8 +20,9 @@ export default function Navbar() {
 
   // Load profile on mount
   useEffect(() => {
-    fetchProfile();
-  }, []);
+    if (status === 'authenticated') fetchProfile();
+    if (status === 'unauthenticated') useProfileStore.setState({ profile: null });
+  }, [status, fetchProfile]);
 
   // Close dropdown on outside click
   useEffect(() => {
