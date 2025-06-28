@@ -3,26 +3,35 @@ import { NextResponse } from "next/server";
 
 export default withAuth(
   function middleware(req) {
-    const response = NextResponse.next();
-    
-    const protectedPaths = [
-      "/write",
-      "/category/.*",  
-      "/profile",
-      "/timeline/.*", 
+    const protectedRoutes = [
+      '/write',
+      '/profile',
+      /^\/category\/.+$/,  
+      /^\/timeline\/.+$/,
     ];
 
-    const isProtectedRoute = protectedPaths.some(path => {
-      const pattern = new RegExp(`^${path.replace('*', '.*')}$`);
-      return pattern.test(req.nextUrl.pathname);
+    const isProtectedRoute = protectedRoutes.some(route => {
+      if (typeof route === 'string') {
+        return req.nextUrl.pathname === route;
+      }
+      return route.test(req.nextUrl.pathname);
     });
 
-    if (isProtectedRoute) {
-      response.headers.set('Cache-Control', 'no-store, max-age=0');
-      response.headers.set('Pragma', 'no-cache');
+    if (!isProtectedRoute) {
+      return NextResponse.next();
     }
 
-    return response;
+    const res = NextResponse.next();
+    res.headers.set('Cache-Control', 'no-store, max-age=0');
+    res.headers.set('Pragma', 'no-cache');
+
+    if ([307, 308].includes(res.status)) {
+      const redirectRes = NextResponse.redirect(res.headers.get('Location')!);
+      redirectRes.headers.set('Cache-Control', 'no-store, max-age=0');
+      return redirectRes;
+    }
+
+    return res;
   },
   {
     pages: {
@@ -37,7 +46,7 @@ export default withAuth(
 export const config = {
   matcher: [
     "/write",
-    "/category/:path*", 
+    "/category/:path*",
     "/profile",
     "/timeline/:path*",
   ],
