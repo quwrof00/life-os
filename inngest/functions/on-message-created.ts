@@ -40,7 +40,8 @@ export const enrichMessage = inngest.createFunction(
           { role: 'user', content },
         ],
         temperature: 0,
-        max_tokens: 100,
+        max_tokens: 256,
+        response_format: {type: "json_object"}
       }),
     });
 
