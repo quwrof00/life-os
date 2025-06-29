@@ -126,6 +126,7 @@ Example:
     }
 
   const hotJson = await hotRes.json();
+  console.log("Hot-take raw JSON:", JSON.stringify(hotJson, null, 2));
     const raw = hotJson.choices?.[0]?.message?.content?.trim();
     if (!raw) {
       throw new Error('Hot‑take classification failed (no content)');
