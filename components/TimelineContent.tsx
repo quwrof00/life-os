@@ -67,7 +67,7 @@ export default function TimelineContent({
                 <span className="absolute inset-0 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 opacity-0 hover:opacity-100 transition-opacity duration-300" />
                 <p className="text-white font-medium relative z-10">{msg.content}</p>
                 <p className="text-sm text-gray-400 mt-1 relative z-10">
-                  {msg.type ?? 'No category'} • {format(new Date(msg.createdAt), 'hh:mm a')}
+                  {msg.type ?? 'No category (API Rate Limit Exceeded!)'} • {format(new Date(msg.createdAt), 'hh:mm a')}
                 </p>
               </li>
             ))}
