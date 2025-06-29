@@ -1,36 +1,149 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# 🧠 LifeOS
+
+**LifeOS** is an AI-first personal operating system for managing your mental chaos.
+
+Just type — ideas, tasks, rants, quotes, notes — and LifeOS categorizes and enhances it automatically.  
+Powered by Claude Sonnet 3 via OpenRouter, it's your all-in-one thought companion.
+
+---
+
+## 🌟 Key Features
+
+### ✍️ Chat-based Entry
+- One input box. No buttons, no forms.
+- Messages are automatically categorized via background AI
+- Supported categories:  
+  `Study`, `Task`, `Idea`, `Rant`, `Log`, `Media`, `Quote`, `Other`
+
+---
+
+## 📂 Category-Specific Intelligence
+
+### 📓 Log (Journal View)
+- A chronological journal of everything you've written  
+- View all entries across categories in one continuous feed  
+- Helps reflect on thoughts, progress, and patterns over time
+
+### 🧠 Study
+- Notes are embedded into a **vector DB**
+- Ask AI follow-up questions based on your past study inputs
+
+### 💡 Ideas
+- Each idea is enhanced with **Why / How / When** dropdowns to deepen thought
+
+### 📊 Rants
+- Emotional tone detected via AI  
+- Visualized in a **mood chart** across your rant history
+
+### ✅ Tasks
+- Support for **priority**, **labels**, and **deadlines**  
+- Simple, frictionless task-tracking interface
+
+### 🎬 Media Opinions
+- AI tags your opinion as **Hot / Cold / Neutral / Nuclear**  
+- Adds a one-liner on **how the public might perceive it**
+
+### 📝 Quotes
+- Each quote gets a **generated interpretation or meaning**
+
+---
+
+## 🔐 Auth & Profiles
+
+- Google and Email sign-in via **NextAuth**
+- Each user has a **profile pic and username**
+- All user data is **fully isolated**
+
+---
+
+## ⚙️ Tech Stack
+
+| Layer        | Tech                                 |
+| ------------ | ------------------------------------ |
+| Frontend     | Next.js, Tailwind CSS, Framer Motion |
+| Backend      | Prisma ORM, PostgreSQL               |
+| AI Layer     | Claude Sonnet 3 via OpenRouter       |
+| Auth         | NextAuth (Google & Email)            |
+| Background   | Inngest for message processing       |
+| Embeddings   | Vector DB (for Study category)       |
+| Hosting      | Vercel                               |
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repo
+```
+git clone https://github.com/your-username/lifeos.git
+cd lifeos
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Environment setup
 
-## Learn More
+Create a `.env.local` file using `.env.example`:
 
-To learn more about Next.js, take a look at the following resources:
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/lifeos
+NEXTAUTH_SECRET=your_secret
+NEXTAUTH_URL=http://localhost:3000
+GOOGLE_CLIENT_ID=your_google_client
+GOOGLE_CLIENT_SECRET=your_google_secret
+OPENROUTER_API_KEY=your_openrouter_key
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 4. Prepare the database
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+npx prisma db push
+```
 
-## Deploy on Vercel
+### 5. Start the dev server
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## ⚙️ How It Works
+
+1. User submits a message via the chatbox
+2. It’s saved in the database via Prisma
+3. **Inngest** triggers a background job calling **Claude Sonnet 3**
+4. AI returns a category → saved → rendered across views
+
+
+## 📸 Screenshots
+
+Coming soon.
+
+---
+
+## 🤝 Contributing
+
+Currently a solo project. Planning to scale it soon. 
+
+---
+
+## 📬 Contact
+
+DM me on (www.linkedin.com/in/shourya-agrawal-54a5522b0)
+or email `shouryaagrawal2806@gmail.com`
+
+---
+
+## 🌐 Live Demo
+
+👉 https://life-os-phi.vercel.app
+
+---
