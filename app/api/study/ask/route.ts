@@ -42,7 +42,7 @@ export async function POST(req: Request) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'anthropic/claude-3-sonnet',
+        model: 'deepseek/deepseek-r1-0528-qwen3-8b:free',
         messages: [
           {
             role: 'system',
@@ -67,7 +67,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, answer });
   } catch (err) {
-    console.error('Claude Ask API error:', err);
+    console.error('Deepseek Ask API error:', err);
     return NextResponse.json({ success: false, error: 'Something went wrong' });
   }
 }

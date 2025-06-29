@@ -23,7 +23,7 @@ export const enrichMessage = inngest.createFunction(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'anthropic/claude-3-sonnet',
+        model: 'deepseek/deepseek-r1-0528-qwen3-8b:free',
         messages: [
           {
             role: 'system',
@@ -99,7 +99,7 @@ export const enrichMessage = inngest.createFunction(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-      model: 'anthropic/claude-3-sonnet',       
+      model: 'deepseek/deepseek-r1-0528-qwen3-8b:free',       
       temperature: 0,
       max_tokens: 100,
       messages: [
