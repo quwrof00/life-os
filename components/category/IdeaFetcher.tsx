@@ -50,7 +50,7 @@ export default function IdeaFetcher() {
           const detailsEntries = await Promise.all(
             validMessages.map(async (msg: Message) => {
               try {
-                const ideaRes = await fetch(`api/idea/${msg.id}`);
+                const ideaRes = await fetch(`/api/idea/${msg.id}`);
                 const ideaData = await ideaRes.json();
 
                 if (ideaData.success) {
