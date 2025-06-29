@@ -106,26 +106,42 @@ export const enrichMessage = inngest.createFunction(
       messages: [
         {
           role: 'system',
-          content: `Classify how bold this media opinion is.
-          Return JSON with keys:
-          - boldness: "Cold Take", "Mild Take", "Hot Take", or "Nuclear Take"
-          - explanation: one short sentence
-          - confidence: integer 0–100 (how sure you are)`,
+          content: `You are a media analyst.
+Return ONLY valid JSON with keys:
+  boldness     - "Cold Take", "Mild Take", "Hot Take", or "Nuclear Take"
+  explanation  - one short sentence
+  confidence   - integer 0–100
+
+Example:
+{"boldness":"Hot Take","explanation":"The opinion sharply disagrees with mainstream consensus.","confidence":88}`,
         },
         { role: 'user', content },                
       ],
     }),
   });
 
-  const hotJson = await hotRes.json();
-  if (!hotRes.ok || !hotJson.choices?.[0]?.message?.content) {
-    throw new Error('Hot-take classification failed');
-  }
+  if (!hotRes.ok) {
+      console.error('OpenRouter error:', await hotRes.text());
+      throw new Error('Hot‑take classification failed (HTTP)');
+    }
 
-  const hotRaw = hotJson.choices[0].message.content.trim()
-                       .replace(/^```json|```$/g, '')
-                       .trim();
-  const { boldness, explanation, confidence } = JSON.parse(hotRaw);
+  const hotJson = await hotRes.json();
+    const raw = hotJson.choices?.[0]?.message?.content?.trim();
+    if (!raw) {
+      throw new Error('Hot‑take classification failed (no content)');
+    }
+
+    const clean = raw.replace(/```json|```/g, '').trim();
+
+    let hotTake;
+    try {
+      hotTake = JSON.parse(clean);
+    } catch {
+      console.error('Malformed JSON from model:', clean);
+      throw new Error('Hot‑take classification failed (parse)');
+    }
+
+    const { boldness, explanation, confidence } = hotTake;
   await prisma.media.upsert({
   where: { messageId },
   create: {
