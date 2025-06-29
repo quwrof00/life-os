@@ -31,7 +31,7 @@ export const enrichMessage = inngest.createFunction(
             Return a JSON object with keys:
             - category: one of STUDY (any study notes), IDEA, RANT, TASK (to-do stuff), LOG (like a journal), MEDIA (anything media-related even rants), QUOTE, OTHER
             - mood: NEUTRAL, HAPPY, SAD, ANGRY, TIRED, ANXIOUS, EXCITED, BORED, REFLECTIVE
-            - summary: one-sentence summary of the message.
+            - summary: a vivid one-sentence summary of the message.
             If unsure, default to:
             category: OTHER
             mood: NEUTRAL
@@ -39,7 +39,7 @@ export const enrichMessage = inngest.createFunction(
           },
           { role: 'user', content },
         ],
-        temperature: 0,
+        temperature: 0.3,
         max_tokens: 256,
         response_format: {type: "json_object"}
       }),
