@@ -24,15 +24,13 @@ export default function Page() {
     const result = await signIn("credentials", {
       email,
       password,
-      redirect: false,
+      callbackUrl: "/write",
     });
 
     setLoading(false);
 
     if (result?.error) {
       setError(result.error);
-    } else {
-      router.push('/write');
     }
   };
 
