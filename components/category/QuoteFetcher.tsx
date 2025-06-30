@@ -8,7 +8,7 @@ export default function QuoteFetcher() {
   const [quotes, setQuotes] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [copied, setCopied] = useState<boolean>(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -47,6 +47,7 @@ export default function QuoteFetcher() {
       <h1 className="text-3xl font-extrabold text-white mb-8 text-center drop-shadow-lg font-serif">
         💬 Words of Wisdom ✨
       </h1>
+
       {loading && (
         <p className="text-neon-blue text-center font-medium">
           <span className="flex items-center justify-center">
@@ -72,11 +73,13 @@ export default function QuoteFetcher() {
           </span>
         </p>
       )}
+
       {error && (
         <p className="text-neon-red text-center font-medium mb-4">
           {error} 😕
         </p>
       )}
+
       {!loading && !error && quotes.length === 0 ? (
         <p className="text-gray-400 text-center font-medium italic font-serif">
           No quotes yet. Share your wisdom! 📜
@@ -89,19 +92,20 @@ export default function QuoteFetcher() {
               initial={prefersReducedMotion ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
-              className="relative p-8 bg-gradient-to-br from-gray-800/30 to-gray-900/30 border border-neon-blue/40 rounded-xl shadow-[0_0_15px_rgba(0,240,255,0.4)] hover:shadow-[0_0_20px_rgba(0,240,255,0.6)] transition-all duration-300 overflow-hidden"
+              className="relative p-8 bg-gray-800 border border-gray-700 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
             >
               <span className="absolute inset-0 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-xl"></span>
               <div className="relative z-10 pl-10 pr-10">
                 <p className="text-lg text-white italic font-serif leading-relaxed tracking-wide mb-3">
                   {quote.content}
                 </p>
+
                 <svg
                   onClick={() => {
                     navigator.clipboard.writeText(quote.content);
-                    setCopied(true);
+                    setCopiedId(quote.id);
                     setTimeout(() => {
-                      setCopied(false)
+                      setCopiedId(null);
                     }, 2000);
                   }}
                   className="absolute bottom-4 right-2 w-6 h-6 text-neon-blue/40 transform rotate-180 cursor-pointer hover:text-neon-blue/60"
@@ -116,11 +120,17 @@ export default function QuoteFetcher() {
                     d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z"
                   />
                 </svg>
-                <p className="text-sm text-gray-200">{quote.summary}</p>
-                <p className="text-sm text-gray-400 mt-2">
+
+                <div className="h-px bg-gray-600 my-4" />
+
+                <p className="text-sm text-gray-300">{quote.summary}</p>
+                <p className="text-xs text-gray-500 mt-1">
                   {new Date(quote.createdAt).toLocaleString()}
                 </p>
-                {copied && <span className="text-white text-sm">Copied!</span>}
+
+                {copiedId === quote.id && (
+                  <span className="text-green-200 text-s mt-2 block">Copied!</span>
+                )}
               </div>
             </motion.li>
           ))}

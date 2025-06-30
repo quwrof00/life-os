@@ -42,7 +42,7 @@ export async function POST(req: Request) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'deepseek/deepseek-r1-0528:free',
+        model: 'qwen/qwen3-30b-a3b-04-28:free',
         messages: [
           {
             role: 'system',
@@ -67,7 +67,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, answer });
   } catch (err) {
-    console.error('Deepseek Ask API error:', err);
+    console.error('OpenRouter Ask API error:', err);
     return NextResponse.json({ success: false, error: 'Something went wrong' });
   }
 }
