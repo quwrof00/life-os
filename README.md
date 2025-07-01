@@ -78,7 +78,7 @@ Powered by Claude Sonnet 3 via OpenRouter, it's your all-in-one thought companio
 
 ### 1. Clone the repo
 ```
-git clone https://github.com/your-username/lifeos.git
+git clone https://github.com/quwrof00/lifeos.git
 cd lifeos
 ```
 
