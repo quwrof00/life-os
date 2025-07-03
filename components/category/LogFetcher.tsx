@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Message } from '@prisma/client';
 import { motion, useReducedMotion } from 'framer-motion';
 import { AnimatedEmoji } from '../AnimatedEmoji';
+import DeleteButton from '../DeleteButton';
 
 interface ExtendedMessage extends Message {
   log?: { mood: string | null };
@@ -112,38 +113,43 @@ export function LogFetcher() {
         )}
 
         {Object.entries(groupedMessages).map(([date, msgs]) => (
-          <div key={date} className="mb-8">
-            <h2 className="text-xl font-semibold text-neon-blue mb-4 sticky top-0 bg-white/5 backdrop-blur-sm py-2 rounded-lg">
-              {date}
-            </h2>
-            <ul className="space-y-4">
-              {msgs.map((message) => (
-                <motion.li
-                  key={message.id}
-                  initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="p-4 bg-gray-800/50 border border-dashed border-neon-blue/30 rounded-xl shadow-[0_0_10px_rgba(0,240,255,0.3)] hover:shadow-[0_0_15px_rgba(0,240,255,0.5)] transition-all duration-300 relative overflow-hidden"
-                >
-                  <span className="absolute inset-0 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 opacity-0 hover:opacity-100 transition-opacity duration-300" />
-                  <div className="relative z-10 flex flex-col sm:flex-row gap-4">
-                    <p className="text-white text-lg mb-2 flex-1">{message.content}</p>
-                    <div className="flex items-center gap-4">
-                      <p className="text-xs text-gray-400">
-                        {new Date(message.createdAt).toLocaleTimeString('en-US', {
-                          hour: 'numeric',
-                          minute: 'numeric',
-                          hour12: true,
-                        })}
-                      </p>
-                      <AnimatedEmoji mood={message.mood} />
-                    </div>
-                  </div>
-                </motion.li>
-              ))}
-            </ul>
+  <div key={date} className="mb-8">
+    <h2 className="text-xl font-semibold text-neon-blue mb-4 sticky top-0 bg-white/5 backdrop-blur-sm py-2 rounded-lg">
+      {date}
+    </h2>
+    <ul className="space-y-4">
+      {msgs.map((message) => (
+        <motion.li
+          key={message.id}
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="p-4 bg-gray-800/50 border border-dashed border-neon-blue/30 rounded-xl shadow-[0_0_10px_rgba(0,240,255,0.3)] hover:shadow-[0_0_15px_rgba(0,240,255,0.5)] transition-all duration-300 relative overflow-hidden"
+        >
+          <span className="absolute inset-0 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 opacity-0 hover:opacity-100 transition-opacity duration-300" />
+          {/* Delete Button */}
+          <DeleteButton
+            messageId={message.id}
+            className="absolute bottom-2 right-2 z-20"
+          />
+          <div className="relative z-10 flex flex-col sm:flex-row gap-4 pr-10 sm:pr-12">
+            <p className="text-white text-lg mb-2 flex-1">{message.content}</p>
+            <div className="flex items-center gap-4">
+              <p className="text-xs text-gray-400">
+                {new Date(message.createdAt).toLocaleTimeString('en-US', {
+                  hour: 'numeric',
+                  minute: 'numeric',
+                  hour12: true,
+                })}
+              </p>
+              <AnimatedEmoji mood={message.mood} />
+            </div>
           </div>
-        ))}
+        </motion.li>
+      ))}
+    </ul>
+  </div>
+))}
       </motion.div>
     </div>
   );

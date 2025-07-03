@@ -5,6 +5,7 @@ import { Message } from '@prisma/client';
 import { motion, useReducedMotion } from 'framer-motion';
 import clsx from 'clsx';
 import { debounce } from 'lodash';
+import DeleteButton from '../DeleteButton';
 
 interface TaskDetails {
   messageId: string;
@@ -211,124 +212,126 @@ export default function TaskFetcher() {
             No quests yet. Start your adventure! 🚀
           </p>
         ) : (
-          <ul className="space-y-4">
-            {tasks.map((task) => {
-              const daysLeft = calculateDaysRemaining(taskDetails[task.id]?.deadline);
-              
-              return (
-                <motion.li
-                  key={task.id}
-                  initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className={clsx(
-                    "flex flex-col sm:flex-row sm:items-center gap-4 p-4 border rounded-xl shadow-[0_0_10px_rgba(0,240,255,0.3)] hover:shadow-[0_0_15px_rgba(0,240,255,0.5)] transition-all duration-300 relative overflow-hidden",
-                    task.completed 
-                      ? "bg-gray-700/50 border-gray-500" 
-                      : daysLeft === null 
-                        ? "bg-gray-800/50 border-neon-blue/30"
-                        : daysLeft < 0 
-                          ? "bg-red-900/30 border-red-500"
-                          : daysLeft <= 3 
-                            ? "bg-yellow-900/30 border-yellow-500"
-                            : "bg-gray-800/50 border-neon-blue/30"
-                  )}
-                >
-                  <span className="absolute inset-0 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
-                  <div className="flex items-center space-x-4 flex-1">
-                    <motion.input
-                      type="checkbox"
-                      checked={!!task.completed}
-                      onChange={() => toggleComplete(task.id, !!task.completed)}
-                      className="w-6 h-6 rounded-full border-neon-blue text-neon-blue focus:ring-neon-blue/50 cursor-pointer relative z-10"
-                      whileHover={prefersReducedMotion ? {} : { scale: 1.05 }}
-                      whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
-                    />
-                    <span
-                      className={clsx(
-                        'text-white font-medium relative z-10 flex-1',
-                        task.completed ? 'line-through text-gray-400' : 'text-neon-blue'
-                      )}
-                    >
-                      {task.content}
-                      {taskDetails[task.id]?.deadline && (
-                        <span className="ml-2 text-xs font-normal">
-                          {task.completed ? (
-                            <span className="text-green-400">✓ Completed</span>
-                          ) : daysLeft === null ? null : daysLeft < 0 ? (
-                            <span className="text-red-400">⚠️ Failed ({Math.abs(daysLeft)} days ago)</span>
-                          ) : (
-                            <span className="text-yellow-300">⏳ {daysLeft} day{daysLeft !== 1 ? 's' : ''} left</span>
-                          )}
-                        </span>
-                      )}
-                    </span>
-                  </div>
-                  
-                  {taskDetails[task.id] && (
-                    <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
-                      <motion.div
-                        className="relative z-10"
-                        whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
-                      >
-                        <input
-                          type="date"
-                          value={taskDetails[task.id].deadline || ''}
-                          onChange={(e) =>
-                            handleTaskUpdate(task.id, 'deadline', e.target.value)
-                          }
-                          className="p-2 bg-gray-900/50 border border-neon-blue/30 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-neon-blue/50"
-                        />
-                      </motion.div>
-                      <motion.div
-                        className="relative z-10"
-                        whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
-                      >
-                        <select
-                          value={taskDetails[task.id].priority || ''}
-                          onChange={(e) =>
-                            handleTaskUpdate(task.id, 'priority', e.target.value)
-                          }
-                          className="p-2 bg-gray-900/50 border border-neon-blue/30 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-neon-blue/50"
-                        >
-                          <option value="" disabled>
-                            Select Priority
-                          </option>
-                          <option value="HIGH">High</option>
-                          <option value="MEDIUM">Medium</option>
-                          <option value="LOW">Low</option>
-                        </select>
-                      </motion.div>
-                      <motion.div
-                        className="relative z-10"
-                        whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
-                      >
-                        <input
-                          type="text"
-                          value={labelInputs[task.id] || ''}
-                          onChange={(e) => handleLabelChange(task.id, e.target.value)}
-                          placeholder="Enter labels (comma-separated)"
-                          className="p-2 bg-gray-900/50 border border-neon-blue/30 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-neon-blue/50 w-full sm:w-40"
-                        />
-                      </motion.div>
-                    </div>
-                  )}
-                  
-                  {saveError[task.id] && (
-                    <p className="text-neon-red text-sm mt-2 relative z-10">
-                      {saveError[task.id]}
-                    </p>
-                  )}
-                  {saving === task.id && (
-                    <p className="text-neon-blue text-sm mt-2 relative z-10 animate-pulse">
-                      Saving…
-                      </p>
-                  )}
-                </motion.li>
-              );
-            })}
-          </ul>
+        <ul className="space-y-4">
+  {tasks.map((task) => {
+    const daysLeft = calculateDaysRemaining(taskDetails[task.id]?.deadline);
+
+    return (
+      <motion.li
+        key={task.id}
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className={clsx(
+          "flex flex-col sm:flex-row sm:items-center gap-4 p-4 border rounded-xl shadow-[0_0_10px_rgba(0,240,255,0.3)] hover:shadow-[0_0_15px_rgba(0,240,255,0.5)] transition-all duration-300 relative overflow-hidden",
+          task.completed 
+            ? "bg-gray-700/50 border-gray-500" 
+            : daysLeft === null 
+              ? "bg-gray-800/50 border-neon-blue/30"
+              : daysLeft < 0 
+                ? "bg-red-900/30 border-red-500"
+                : daysLeft <= 3 
+                  ? "bg-yellow-900/30 border-yellow-500"
+                  : "bg-gray-800/50 border-neon-blue/30"
         )}
+      >
+        <span className="absolute inset-0 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
+        {/* Delete Button */}
+        <DeleteButton
+          messageId={task.id}
+          className="absolute top-2 right-2 z-20"
+        />
+        <div className="flex items-center space-x-4 flex-1 pr-10 sm:pr-12">
+          <motion.input
+            type="checkbox"
+            checked={!!task.completed}
+            onChange={() => toggleComplete(task.id, !!task.completed)}
+            className="w-6 h-6 rounded-full border-neon-blue text-neon-blue focus:ring-neon-blue/50 cursor-pointer relative z-10"
+            whileHover={prefersReducedMotion ? {} : { scale: 1.05 }}
+            whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
+          />
+          <span
+            className={clsx(
+              'text-white font-medium relative z-10 flex-1',
+              task.completed ? 'line-through text-gray-400' : 'text-neon-blue'
+            )}
+          >
+            {task.content}
+            {taskDetails[task.id]?.deadline && (
+              <span className="ml-2 text-xs font-normal">
+                {task.completed ? (
+                  <span className="text-green-400">✓ Completed</span>
+                ) : daysLeft === null ? null : daysLeft < 0 ? (
+                  <span className="text-red-400">⚠️ Failed ({Math.abs(daysLeft)} days ago)</span>
+                ) : (
+                  <span className="text-yellow-300">⏳ {daysLeft} day{daysLeft !== 1 ? 's' : ''} left</span>
+                )}
+              </span>
+            )}
+          </span>
+        </div>
+        {taskDetails[task.id] && (
+          <div className="flex flex-col sm:flex-row gap-3 sm:items-center pr-10 sm:pr-12">
+            <motion.div
+              className="relative z-10"
+              whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
+            >
+              <input
+                type="date"
+                value={taskDetails[task.id].deadline || ''}
+                onChange={(e) =>
+                  handleTaskUpdate(task.id, 'deadline', e.target.value)
+                }
+                className="p-2 bg-gray-900/50 border border-neon-blue/30 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-neon-blue/50"
+              />
+            </motion.div>
+            <motion.div
+              className="relative z-10"
+              whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
+            >
+              <select
+                value={taskDetails[task.id].priority || ''}
+                onChange={(e) =>
+                  handleTaskUpdate(task.id, 'priority', e.target.value)
+                }
+                className="p-2 bg-gray-900/50 border border-neon-blue/30 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-neon-blue/50"
+              >
+                <option value="" disabled>
+                  Select Priority
+                </option>
+                <option value="HIGH">High</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="LOW">Low</option>
+              </select>
+            </motion.div>
+            <motion.div
+              className="relative z-10"
+              whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
+            >
+              <input
+                type="text"
+                value={labelInputs[task.id] || ''}
+                onChange={(e) => handleLabelChange(task.id, e.target.value)}
+                placeholder="Enter labels (comma-separated)"
+                className="p-2 bg-gray-900/50 border border-neon-blue/30 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-neon-blue/50 w-full sm:w-40"
+              />
+            </motion.div>
+          </div>
+        )}
+        {saveError[task.id] && (
+          <p className="text-neon-red text-sm mt-2 relative z-10">
+            {saveError[task.id]}
+          </p>
+        )}
+        {saving === task.id && (
+          <p className="text-neon-blue text-sm mt-2 relative z-10 animate-pulse">
+            Saving…
+          </p>
+        )}
+      </motion.li>
+    );
+  })}
+</ul> )}
       </motion.div>
     </div>
   );

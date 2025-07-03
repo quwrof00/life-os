@@ -5,6 +5,7 @@ import { HeatMapChart } from '@/components/HeatMapChart';
 import { AnimatedEmoji } from '@/components/AnimatedEmoji';
 import { Message } from '@prisma/client';
 import { motion, AnimatePresence } from 'framer-motion';
+import DeleteButton from '@/components/DeleteButton';
 
 export default function RantPage() {
   const [rants, setRants] = useState<Message[]>([]);
@@ -59,24 +60,31 @@ export default function RantPage() {
         <div className="grid grid-cols-1 gap-4">
           <AnimatePresence>
             {rants.map((rant, index) => (
-              <motion.div
-                key={rant.id}
-                initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
-                animate={shouldAnimate ? { opacity: 1, y: 0 } : false}
-                exit={shouldAnimate ? { opacity: 0, y: -20 } : {}}
-                transition={
-                  shouldAnimate
-                    ? { duration: 0.3, delay: index * 0.1, ease: [0.4, 0, 0.2, 1] }
-                    : {}
-                }
-                className="p-4 bg-gray-800/50 border border-neon-blue/30 rounded-xl shadow-[0_0_10px_rgba(0,240,255,0.3)] hover:shadow-[0_0_15px_rgba(0,240,255,0.5)] transition-all duration-300 relative overflow-hidden flex justify-between items-center"
-                whileHover={{ scale: 1.02, rotate: 0.5 }}
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
-                <p className="text-lg text-white font-medium relative z-10 flex-1">{rant.content}</p>
-                <AnimatedEmoji mood={rant.mood} />
-              </motion.div>
-            ))}
+  <motion.div
+    key={rant.id}
+    initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
+    animate={shouldAnimate ? { opacity: 1, y: 0 } : false}
+    exit={shouldAnimate ? { opacity: 0, y: -20 } : {}}
+    transition={
+      shouldAnimate
+        ? { duration: 0.3, delay: index * 0.1, ease: [0.4, 0, 0.2, 1] }
+        : {}
+    }
+    className="p-4 bg-gray-800/50 border border-neon-blue/30 rounded-xl shadow-[0_0_10px_rgba(0,240,255,0.3)] hover:shadow-[0_0_15px_rgba(0,240,255,0.5)] transition-all duration-300 relative overflow-hidden flex justify-between items-center"
+    whileHover={{ scale: 1.02, rotate: 0.5 }}
+  >
+    <span className="absolute inset-0 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
+    {/* Delete Button */}
+    <DeleteButton
+      messageId={rant.id}
+      className="absolute bottom-2 right-2 z-20"
+    />
+    <p className="text-lg text-white font-medium relative z-10 flex-1 pr-12">{rant.content}</p>
+    <div className="relative z-10 pr-10">
+      <AnimatedEmoji mood={rant.mood} />
+    </div>
+  </motion.div>
+))}
           </AnimatePresence>
         </div>
       </div>

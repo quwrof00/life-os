@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Message } from '@prisma/client';
 import { motion, useReducedMotion } from 'framer-motion';
+import DeleteButton from '../DeleteButton';
 
 export default function OtherFetcher() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -82,31 +83,36 @@ export default function OtherFetcher() {
         </p>
       ) : (
         <ul className="space-y-4">
-          {messages.map((message) => (
-            <motion.li
-              key={message.id}
-              initial={prefersReducedMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-              className="p-4 bg-gray-800/50 border border-neon-blue/30 rounded-xl shadow-[0_0_10px_rgba(0,240,255,0.3)] hover:shadow-[0_0_15px_rgba(0,240,255,0.5)] transition-all duration-300 relative overflow-hidden"
-            >
-              <span className="absolute inset-0 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
-              <div className="relative z-10">
-                <p className="text-white font-medium text-sm line-clamp-3 mb-2">
-                  {message.content}
-                </p>
-                <div className="flex justify-between items-center">
-                  <p className="text-xs text-gray-400">
-                    {new Date(message.createdAt).toLocaleDateString()}
-                  </p>
-                  <span className="text-xs text-neon-blue font-semibold">
-                    {message.type}
-                  </span>
-                </div>
-              </div>
-            </motion.li>
-          ))}
-        </ul>
+  {messages.map((message) => (
+    <motion.li
+      key={message.id}
+      initial={prefersReducedMotion ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="p-4 bg-gray-800/50 border border-neon-blue/30 rounded-xl shadow-[0_0_10px_rgba(0,240,255,0.3)] hover:shadow-[0_0_15px_rgba(0,240,255,0.5)] transition-all duration-300 relative overflow-hidden"
+    >
+      <span className="absolute inset-0 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
+      {/* Delete Button */}
+      <DeleteButton
+        messageId={message.id}
+        className="absolute bottom-2 right-2 z-20"
+      />
+      <div className="relative z-10 pr-10">
+        <p className="text-white font-medium text-sm line-clamp-3 mb-2">
+          {message.content}
+        </p>
+        <div className="flex justify-between items-center">
+          <p className="text-xs text-gray-400">
+            {new Date(message.createdAt).toLocaleDateString()}
+          </p>
+          <span className="text-xs text-neon-blue font-semibold pr-6">
+            {message.type}
+          </span>
+        </div>
+      </div>
+    </motion.li>
+  ))}
+</ul>
       )}
     </>
   );

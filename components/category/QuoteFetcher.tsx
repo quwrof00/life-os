@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Message } from '@prisma/client';
 import { motion, useReducedMotion } from 'framer-motion';
+import DeleteButton from '../DeleteButton';
 
 export default function QuoteFetcher() {
   const [quotes, setQuotes] = useState<Message[]>([]);
@@ -81,61 +82,62 @@ export default function QuoteFetcher() {
       )}
 
       {!loading && !error && quotes.length === 0 ? (
-        <p className="text-gray-400 text-center font-medium italic font-serif">
-          No quotes yet. Share your wisdom! 📜
-        </p>
-      ) : (
-        <ul className="space-y-6">
-          {quotes.map((quote) => (
-            <motion.li
-              key={quote.id}
-              initial={prefersReducedMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-              className="relative p-8 bg-gray-800 border border-gray-700 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
-            >
-              <span className="absolute inset-0 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-xl"></span>
-              <div className="relative z-10 pl-10 pr-10">
-                <p className="text-lg text-white italic font-serif leading-relaxed tracking-wide mb-3">
-                  {quote.content}
-                </p>
-
-                <svg
-                  onClick={() => {
-                    navigator.clipboard.writeText(quote.content);
-                    setCopiedId(quote.id);
-                    setTimeout(() => {
-                      setCopiedId(null);
-                    }, 2000);
-                  }}
-                  className="absolute bottom-4 right-2 w-6 h-6 text-neon-blue/40 transform rotate-180 cursor-pointer hover:text-neon-blue/60"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z"
-                  />
-                </svg>
-
-                <div className="h-px bg-gray-600 my-4" />
-
-                <p className="text-sm text-gray-300">{quote.summary}</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {new Date(quote.createdAt).toLocaleString()}
-                </p>
-
-                {copiedId === quote.id && (
-                  <span className="text-green-200 text-s mt-2 block">Copied!</span>
-                )}
-              </div>
-            </motion.li>
-          ))}
-        </ul>
-      )}
+  <p className="text-gray-400 text-center font-medium italic font-serif">
+    No quotes yet. Share your wisdom! 📜
+  </p>
+) : (
+  <ul className="space-y-6">
+    {quotes.map((quote) => (
+      <motion.li
+        key={quote.id}
+        initial={prefersReducedMotion ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+        className="relative p-8 bg-gray-800 border border-gray-700 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+      >
+        <span className="absolute inset-0 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-xl"></span>
+        {/* Delete Button */}
+        <DeleteButton
+          messageId={quote.id}
+          className="absolute top-2 right-2 z-20"
+        />
+        <div className="relative z-10 pl-10 pr-10">
+          <p className="text-lg text-white italic font-serif leading-relaxed tracking-wide mb-3">
+            {quote.content}
+          </p>
+          <svg
+            onClick={() => {
+              navigator.clipboard.writeText(quote.content);
+              setCopiedId(quote.id);
+              setTimeout(() => {
+                setCopiedId(null);
+              }, 2000);
+            }}
+            className="absolute bottom-4 right-2 w-6 h-6 text-neon-blue/40 transform rotate-180 cursor-pointer hover:text-neon-blue/60"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z"
+            />
+          </svg>
+          <div className="h-px bg-gray-600 my-4" />
+          <p className="text-sm text-gray-300">{quote.summary}</p>
+          <p className="text-xs text-gray-500 mt-1">
+            {new Date(quote.createdAt).toLocaleString()}
+          </p>
+          {copiedId === quote.id && (
+            <span className="text-green-200 text-sm mt-2 block">Copied!</span>
+          )}
+        </div>
+      </motion.li>
+    ))}
+  </ul>
+)}
     </>
   );
 

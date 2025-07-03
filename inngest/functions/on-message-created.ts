@@ -108,9 +108,9 @@ export const enrichMessage = inngest.createFunction(
           role: 'system',
           content: `You are a media analyst.
 Return ONLY valid JSON with keys:
-  boldness     - "Cold Take", "Mild Take", "Hot Take", or "Nuclear Take"
+  boldness (wrt public op) - "Cold Take", "Mild Take", "Hot Take", or "Nuclear Take"
   explanation  - one short sentence
-  confidence   - integer 0–100
+  confidence (of the response) - integer 0–100
 
 Example:
 {"boldness":"Hot Take","explanation":"The opinion sharply disagrees with mainstream consensus.","confidence":88}`,

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
+import DeleteButton from '../DeleteButton';
 
 type Message = {
   id: string;
@@ -97,29 +98,34 @@ export default function StudyFetcher() {
           </p>
         ) : (
           <ul className="space-y-4">
-            {messages.map((msg) => (
-              <motion.li
-                key={msg.id}
-                initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="p-4 bg-gray-800/50 border border-neon-blue/30 rounded-xl shadow-[0_0_10px_rgba(0,240,255,0.3)] hover:shadow-[0_0_15px_rgba(0,240,255,0.5)] transition-all duration-300 relative overflow-hidden"
-                whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
-              >
-                <Link href={`/category/STUDY/${msg.id}`} passHref>
-                  <div className="relative">
-                    <span className="absolute inset-0 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
-                    <p className="text-neon-blue line-clamp-2 font-medium relative z-10 hover:text-neon-cyan transition-colors">
-                      {msg.content}
-                    </p>
-                  </div>
-                </Link>
-                <p className="text-sm text-gray-400 mt-1 relative z-10">
-                  {new Date(msg.createdAt).toLocaleString()}
-                </p>
-              </motion.li>
-            ))}
-          </ul>
+  {messages.map((msg) => (
+    <motion.li
+      key={msg.id}
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="p-4 bg-gray-800/50 border border-neon-blue/30 rounded-xl shadow-[0_0_10px_rgba(0,240,255,0.3)] hover:shadow-[0_0_15px_rgba(0,240,255,0.5)] transition-all duration-300 relative overflow-hidden"
+      whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
+    >
+      <Link href={`/category/STUDY/${msg.id}`} passHref>
+        <div className="relative pr-10">
+          <span className="absolute inset-0 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
+          <p className="text-neon-blue line-clamp-2 font-medium relative z-10 hover:text-neon-cyan transition-colors">
+            {msg.content}
+          </p>
+        </div>
+      </Link>
+      <p className="text-sm text-gray-400 mt-1 relative z-10 pr-10">
+        {new Date(msg.createdAt).toLocaleString()}
+      </p>
+      {/* Delete Button */}
+      <DeleteButton
+        messageId={msg.id}
+        className="absolute bottom-2 right-2 z-20"
+      />
+    </motion.li>
+  ))}
+</ul>
         )}
       </motion.div>
     </div>

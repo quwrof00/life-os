@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import DeleteButton from './DeleteButton';
 
 interface Message {
   id: string;
@@ -60,17 +61,22 @@ export default function TimelineContent({
         ) : (
           <ul className="space-y-4">
             {messages.map((msg) => (
-              <li
-                key={msg.id}
-                className="bg-gray-800/50 border border-neon-blue/30 p-4 rounded-xl shadow-[0_0_10px_rgba(0,240,255,0.3)] hover:shadow-[0_0_15px_rgba(0,240,255,0.5)] transition-all duration-300 relative overflow-hidden"
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 opacity-0 hover:opacity-100 transition-opacity duration-300" />
-                <p className="text-white font-medium relative z-10">{msg.content}</p>
-                <p className="text-sm text-gray-400 mt-1 relative z-10">
-                  {msg.type ?? 'No category (API Rate Limit Exceeded!)'} • {format(new Date(msg.createdAt), 'hh:mm a')}
-                </p>
-              </li>
-            ))}
+  <li
+    key={msg.id}
+    className="bg-gray-800/50 border border-neon-blue/30 p-4 rounded-xl shadow-[0_0_10px_rgba(0,240,255,0.3)] hover:shadow-[0_0_15px_rgba(0,240,255,0.5)] transition-all duration-300 relative overflow-hidden"
+  >
+    <span className="absolute inset-0 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 opacity-0 hover:opacity-100 transition-opacity duration-300" />
+    {/* Delete Button */}
+    <DeleteButton
+      messageId={msg.id}
+      className="absolute bottom-2 right-2 z-20"
+    />
+    <p className="text-white font-medium relative z-10 pr-10">{msg.content}</p>
+    <p className="text-sm text-gray-400 mt-1 relative z-10 pr-10">
+      {msg.type ?? 'No category (API Rate Limit Exceeded!)'} • {format(new Date(msg.createdAt), 'hh:mm a')}
+    </p>
+  </li>
+))}
           </ul>
         )}
 
