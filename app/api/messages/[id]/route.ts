@@ -94,7 +94,7 @@ export async function DELETE(
   })
 
   return NextResponse.json({ success: true});
-  } catch (error) {
+  } catch {
     return NextResponse.json({success: false, error: "Failed to delete message"});
   }
 }
